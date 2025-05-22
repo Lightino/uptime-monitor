@@ -4,6 +4,10 @@ export async function up(knex) {
     table.string('name').notNull();
     table.string('url').notNull();
     table.boolean('status').notNull();
+    table.integer('incidents').notNull();
+    table.integer('responseTime').notNull();
+    table.integer('website');
+    table.integer('api');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });

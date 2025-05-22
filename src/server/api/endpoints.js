@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import { knex } from '../db/index.js';
 
 const router = express.Router();
@@ -65,6 +65,14 @@ router.get('/', (req, res) => {
  *                 type: string
  *               status:
  *                 type: boolean
+ *               incidents:
+ *                 type: integer
+ *               responseTime:
+ *                 type: integer
+ *               website:
+ *                 type: integer
+ *               api:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Endpoint added
@@ -74,10 +82,10 @@ router.get('/', (req, res) => {
  *         description: Endpoint already on db
  */
 router.post('/add', (req, res) => {
-  const { name, url, status } = req.body;
+  const { name, url, status, incidents, responseTime, website, api } = req.body;
 
-  if (!name || !url || !status) {
-    return res.status(400).json({ error: 'Name and URL are required' });
+  if (!name || !url) {
+    return res.status(400).json({ error: 'Missing datas' });
   }
 
   knex('endpoints')
@@ -89,7 +97,7 @@ router.post('/add', (req, res) => {
       }
 
       return knex('endpoints')
-        .insert({ name, url, status })
+        .insert({ name, url, status, incidents, responseTime, website, api })
         .returning('*')
         .then((newData) => {
           res.status(201).json({ data: newData });

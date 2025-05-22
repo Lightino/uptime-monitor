@@ -1,35 +1,38 @@
 <template>
   <div class="container mx-auto">
-    <NavBar />
-    <div
-      class="flex items-center justify-center min-h-screen px-4 md:px-6 py-12"
-    >
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4 w-full max-w-6xl"
+    <Navbar class="mb-4" />
+
+    <div v-if="endpoints.length" class="m-4 text-2xl flex items-center gap-2">
+      {{ endpoints[selectedEndpoint].name }}
+      <span
+        class="badge rounded-full"
+        :class="endpoints[selectedEndpoint].status ? 'badge-success' : 'badge-error'"
       >
-        <UptimeCard
-          v-for="(element, index) in data"
-          :key="index"
-          :service="element"
-        />
-      </div>
+        {{ endpoints[selectedEndpoint].status ? 'Online' : 'Offline' }}
+      </span>
     </div>
+
+    <template v-if="endpoints.length">
+      <Tabs />
+      <Services />
+    </template>
+
+    <div v-else class="m-4 text-base-content/50">Caricamento dati...</div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import UptimeCard from "./components/UptimeCard.vue";
-import NavBar from "./components/NavBar.vue";
+import Navbar from "./components/Navbar.vue";
+import Tabs from "./components/Tabs.vue";
+import Services from "./components/subcomponents/Services.vue";
+import { onMounted } from "vue";
+import { useEndpointStore } from "./stores/useEndpointStore.js";
+import { storeToRefs } from "pinia";
 
-const data = ref([]);
+const endpointStore = useEndpointStore();
+const { endpoints, selectedEndpoint } = storeToRefs(endpointStore);
 
-onMounted(async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/endpoints");
-    data.value = await res.json();
-  } catch (err) {
-    console.error("Errore nel fetch:", err);
-  }
+onMounted(() => {
+  endpointStore.fetchEndpoints();
 });
 </script>

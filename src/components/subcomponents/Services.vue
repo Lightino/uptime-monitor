@@ -1,0 +1,51 @@
+<template>
+  <div>
+    <div>
+      <div class="text-xl mx-4 mt-8 font-semibold">Services</div>
+      <div class="card w-96">
+        <ul class="space-y-0.5">
+          <li
+            class="flex items-center gap-2 px-4 py-2.5"
+            v-for="(service, index) in services"
+            :key="index"
+          >
+            <div class="bg-[#2b3840] rounded-lg p-3">
+              <span
+                class="size-5 flex items-center"
+                :class="service.icon"
+              ></span>
+            </div>
+            <div class="flex grow items-center justify-between gap-y-1">
+              <div>
+                <h6 class="text-white">{{ service.type }}</h6>
+                <div class="text-base-content/80 text-xs">
+                  {{ service.status }}
+                </div>
+              </div>
+              <div class="flex flex-col items-end gap-x-2 gap-y-0.5">
+                <span>{{ service.ms }}ms</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+const services = [
+  {
+    type: "Website",
+    status: "Online",
+    ms: 200,
+    icon: "icon-[tabler--world]",
+  },
+  {
+    type: "API",
+    status: "Online",
+    ms: 150,
+    icon: "icon-[tabler--code]",
+  },
+];
+</script>
