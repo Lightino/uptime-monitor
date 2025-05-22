@@ -82,7 +82,7 @@ router.get('/', (req, res) => {
  *         description: Endpoint already on db
  */
 router.post('/add', (req, res) => {
-  const { name, url, status, incidents, responseTime, website, api } = req.body;
+  const { name, url, status = false, incidents = 0, responseTime = 0, website = 0, api = 0 } = req.body;
 
   if (!name || !url) {
     return res.status(400).json({ error: 'Missing datas' });

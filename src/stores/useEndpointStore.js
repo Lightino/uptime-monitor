@@ -12,6 +12,9 @@ export const useEndpointStore = defineStore("endpoint", {
     setSelectedEndpoint(index) {
       this.selectedEndpoint = index;
     },
+    setEndpointsArray(array){
+      this.endpoints = array;
+    },
     async fetchEndpoints() {
       try {
         const res = await fetch("http://localhost:3000/api/endpoints");

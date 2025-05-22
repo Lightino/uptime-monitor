@@ -18,7 +18,7 @@
             <div class="flex grow items-center justify-between gap-y-1">
               <div>
                 <h6 class="text-white">{{ service.type }}</h6>
-                <div class="text-base-content/80 text-xs">
+                <div class="text-base-content/80 text-xs" :class="service.status == 'Online'? 'text-green-500' : 'text-red-500'">
                   {{ service.status }}
                 </div>
               </div>
@@ -34,18 +34,29 @@
 </template>
 
 <script setup>
-const services = [
-  {
-    type: "Website",
-    status: "Online",
-    ms: 200,
-    icon: "icon-[tabler--world]",
-  },
-  {
-    type: "API",
-    status: "Online",
-    ms: 150,
-    icon: "icon-[tabler--code]",
-  },
-];
+import { computed } from "vue";
+import { useEndpointStore } from "../../stores/useEndpointStore.js";
+import { storeToRefs } from "pinia";
+
+const endpointStore = useEndpointStore();
+const { endpoints, selectedEndpoint } = storeToRefs(endpointStore);
+
+const services = computed(() => {
+  const current = endpoints.value[selectedEndpoint.value] || {};
+
+  return [
+    {
+      type: "Website",
+      status: current.website > 0? "Online" : "Offline",
+      ms: current.website ?? "-",
+      icon: "icon-[tabler--world]",
+    },
+    {
+      type: "API",
+      status: current.api > 0? "Online" : "Offline",
+      ms: current.api ?? "-",
+      icon: "icon-[tabler--code]",
+    },
+  ];
+});
 </script>
