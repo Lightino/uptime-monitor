@@ -6,6 +6,9 @@ export async function up(knex) {
     table.boolean('status').notNull();
     table.integer('incidents').notNull();
     table.integer('responseTime').notNull();
+    table.integer('prev_incidents').notNull();
+    table.integer('prev_responseTime').notNull();
+    table.jsonb('responseTimeArray');
     table.integer('website');
     table.integer('api');
     table.timestamp('created_at').defaultTo(knex.fn.now());

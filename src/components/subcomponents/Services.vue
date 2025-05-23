@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="animate-fade-up">
     <div>
       <div class="text-xl mx-4 mt-8 font-semibold">Services</div>
       <div class="card w-96">

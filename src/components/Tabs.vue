@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="tabs tabs-bordered px-4"
+    class="tabs tabs-bordered px-4 animate-fade-up"
     aria-label="Tabs"
     role="tablist"
     aria-orientation="horizontal"
@@ -31,7 +31,8 @@
       :aria-labelledby="`tab-${tab.id}`"
       v-show="tab.id === activeTab"
     >
-      <BodyGrid :a="tab.a" />
+      <BodyGrid v-if="tab.a == 1" />
+      <Chart v-if="tab.a == 2" :latestResponseMs="endpoints[selectedEndpoint].responseTime" />
     </div>
   </div>
 </template>
@@ -39,6 +40,13 @@
 <script setup>
 import { ref } from 'vue'
 import BodyGrid from './BodyGrid.vue'
+import Chart from './Chart.vue'
+
+import { useEndpointStore } from "../stores/useEndpointStore.js";
+import { storeToRefs } from "pinia";
+
+const endpointStore = useEndpointStore();
+const { endpoints, selectedEndpoint } = storeToRefs(endpointStore);
 
 const activeTab = ref('home')
 
@@ -49,13 +57,13 @@ const tabs = [
     a: 1,
   },
   {
-    id: 'profile',
-    label: 'Profile',
+    id: 'charts',
+    label: 'Charts',
     a: 2,
   },
   {
-    id: 'messages',
-    label: 'Messages',
+    id: 'notes',
+    label: 'Notes',
     a: 3,
   },
 ]

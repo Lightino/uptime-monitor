@@ -69,6 +69,8 @@ router.get('/', (req, res) => {
  *                 type: integer
  *               responseTime:
  *                 type: integer
+ *               responseTimeArray:
+ *                 type: jsonb
  *               website:
  *                 type: integer
  *               api:
@@ -82,7 +84,7 @@ router.get('/', (req, res) => {
  *         description: Endpoint already on db
  */
 router.post('/add', (req, res) => {
-  const { name, url, status = false, incidents = 0, responseTime = 0, website = 0, api = 0 } = req.body;
+  const { name, url, status = false, incidents = 0, prev_incidents = 0, prev_responseTime = 0, responseTime = 0, website = 0, api = 0, responseTimeArray = {data: []} } = req.body;
 
   if (!name || !url) {
     return res.status(400).json({ error: 'Missing datas' });
@@ -97,7 +99,7 @@ router.post('/add', (req, res) => {
       }
 
       return knex('endpoints')
-        .insert({ name, url, status, incidents, responseTime, website, api })
+        .insert({ name, url, status, incidents, responseTime, website, api, prev_incidents, prev_responseTime, responseTimeArray })
         .returning('*')
         .then((newData) => {
           res.status(201).json({ data: newData });

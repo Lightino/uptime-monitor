@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import { knex } from "../db/index.js";
+import _ from "lodash";
 
 let wsClients = new Set();
 export function setWebSocketClients(clients) {
@@ -7,13 +8,15 @@ export function setWebSocketClients(clients) {
 }
 
 export function startMonitorJob() {
-  cron.schedule("*/10 * * * * *", async () => {
+  cron.schedule("*/5 * * * *", async () => { // Every 5 min
     try {
       const endpoints = await knex("endpoints").select("*");
 
       for (const ep of endpoints) {
         const start = Date.now();
         let status = false;
+
+        let errors = 0;
 
         try {
           const res = await fetch(ep.url, {
@@ -22,14 +25,21 @@ export function startMonitorJob() {
           });
           status = res.ok;
         } catch (err) {
+          errors = ep.incidents + 1;
           console.error(`❌ Errore su ${ep.url}:`, err.message);
         }
 
         const responseTime = Date.now() - start;
 
+        ep.responseTimeArray['data'] = _.takeRight([...ep.responseTimeArray['data'] , responseTime], 10);
+
         await knex("endpoints").where({ id: ep.id }).update({
           status,
           responseTime: responseTime,
+          incidents: errors,
+          prev_responseTime: ep.responseTime,
+          responseTimeArray: ep.responseTimeArray,
+          prev_incidents: ep.incidents,
           updated_at: new Date(),
         });
       }
