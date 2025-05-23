@@ -32,7 +32,7 @@
       v-show="tab.id === activeTab"
     >
       <BodyGrid v-if="tab.a == 1" />
-      <Chart v-if="tab.a == 2" :latestResponseMs="endpoints[selectedEndpoint].responseTime" />
+      <Chart v-if="tab.a == 2" :latestResponseMs="endpoints[selectedEndpoint].responseTime" :key="endpoints[selectedEndpoint]" />
     </div>
   </div>
 </template>

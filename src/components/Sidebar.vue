@@ -1,131 +1,138 @@
 <template>
   <div>
+    <!-- Toggle Sidebar -->
     <button
       type="button"
       class="btn btn-text max-sm:btn-square"
-      aria-haspopup="dialog"
-      aria-expanded="false"
-      aria-controls="default-sidebar"
-      data-overlay="#default-sidebar"
+      @click="sidebarOpen = !sidebarOpen"
     >
       <span class="icon-[tabler--menu-2] size-5"></span>
     </button>
 
-    <aside
-      id="default-sidebar"
-      class="overlay [--auto-close:sm] sm:shadow-none overlay-open:translate-x-0 drawer drawer-start hidden max-w-64"
-      role="dialog"
-      tabindex="-1"
-    >
-      <div class="drawer-body px-2 pt-4">
-        <div class="mb-2 text-xl font-medium">Monitored Server</div>
-        <ul class="menu p-0">
-          <li
-            v-for="(element, index) in endpoints"
-            :key="index"
-            @click="selectElement(index)"
-            data-overlay="#default-sidebar"
-          >
-            <div class="flex items-center">
-              <span class="icon-[tabler--cloud] size-5"></span>
-              <span class="text-sm">{{ element.name }}</span>
-              <span>{{ element.status ? "🟢" : "🔴" }}</span>
-            </div>
-          </li>
-          <div class="divider text-base-content/50 py-6 after:border-0">
-            Add new server
+    <!-- Sidebar -->
+    <div v-show="sidebarOpen" class="fixed inset-0 z-30 flex">
+      <Transition
+        name="slide"
+        enter-active-class="transition-transform duration-300 ease-out"
+        leave-active-class="transition-transform duration-200 ease-in"
+        enter-from-class="-translate-x-64"
+        enter-to-class="translate-x-0"
+        leave-from-class="-translate-x-64"
+        leave-to-class="translate-x-0"
+      >
+        <aside
+          v-if="sidebarOpen"
+          ref="sidebarRef"
+          class="w-64 h-full bg-base-100 shadow-md p-4 pt-6 z-40"
+          role="dialog"
+        >
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-medium">Monitored Server</h2>
           </div>
-          <button
-            class="btn btn-success"
-            aria-haspopup="dialog"
-            aria-expanded="false"
-            aria-controls="fullscreen-modal"
-            data-overlay="#fullscreen-modal"
-          >
-            <span class="icon-[tabler--plus] size-4.5 shrink-0"></span>
-            Add server
-          </button>
-        </ul>
-      </div>
-    </aside>
+          <ul class="menu p-0">
+            <li
+              v-for="(element, index) in endpoints"
+              :key="index"
+              @click="
+                selectElement(index);
+                sidebarOpen = false;
+              "
+            >
+              <div class="flex items-center gap-2">
+                <span class="icon-[tabler--cloud] size-5"></span>
+                <span class="text-sm">{{ element.name }}</span>
+                <span>{{ element.status ? "🟢" : "🔴" }}</span>
+              </div>
+            </li>
+            <div class="divider text-base-content/50 py-6 after:border-0">
+              Add new server
+            </div>
+            <button class="btn btn-success" @click="modalOpen = true">
+              <span class="icon-[tabler--plus] size-4.5 shrink-0"></span>
+              Add server
+            </button>
+          </ul>
+        </aside>
+      </Transition>
+      
+      <div class="flex-1" @click="handleClickOutsideSidebar"></div>
+
+    </div>
   </div>
 
+  <!-- Modal -->
   <div
-    id="fullscreen-modal"
-    class="overlay modal overlay-open:opacity-100 overlay-open:duration-300 hidden"
+    v-if="modalOpen"
+    class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center"
     role="dialog"
-    tabindex="-1"
   >
-    <div
-      class="modal-dialog overlay-open:opacity-100 overlay-open:duration-300 max-w-none"
-    >
-      <div class="modal-content justify-between">
-        <div class="modal-header">
-          <h3 class="modal-title flex items-center space-between">
-            <span class="icon-[tabler--server-spark]"></span>&nbsp;&nbsp;Add new
-            server
-          </h3>
-          <button
-            type="button"
-            class="btn btn-text btn-circle btn-sm absolute end-3 top-3"
-            aria-label="Close"
-            data-overlay="#fullscreen-modal"
-          >
-            <span class="icon-[tabler--x] size-4"></span>
-          </button>
-        </div>
-        <div class="modal-body grow">
-          <div class="input-floating mb-4">
-            <input
-              type="text"
-              placeholder="Google"
-              class="input"
-              id="serverName"
-              v-model="serverName"
-            />
-            <label class="input-floating-label" for="serverName"
-              >Server name</label
-            >
-          </div>
+    <div class="bg-base-100 p-6 rounded-lg w-full max-w-lg shadow-lg">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold flex items-center gap-2">
+          <span class="icon-[tabler--server-spark]"></span>
+          Add new server
+        </h3>
+        <button
+          @click="modalOpen = false"
+          class="btn btn-text btn-circle btn-sm"
+        >
+          <span class="icon-[tabler--x] size-4"></span>
+        </button>
+      </div>
 
-          <div class="input-floating mb-4">
-            <input
-              type="text"
-              placeholder="https://google.com"
-              class="input"
-              id="serverUrl"
-              v-model="serverUrl"
-            />
-            <label class="input-floating-label" for="serverUrl">URL</label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-soft btn-secondary"
-            data-overlay="#fullscreen-modal"
-          >
-            Close
-          </button>
-          <button type="button" class="btn btn-primary" @click="addServer">
-            Save changes
-          </button>
-        </div>
+      <div class="mb-4">
+        <label class="label" for="serverName">Server name</label>
+        <input
+          type="text"
+          class="input w-full"
+          id="serverName"
+          v-model="serverName"
+          placeholder="Google"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="label" for="serverUrl">URL</label>
+        <input
+          type="text"
+          class="input w-full"
+          id="serverUrl"
+          v-model="serverUrl"
+          placeholder="https://google.com"
+        />
+      </div>
+
+      <div class="modal-footer flex justify-end gap-2">
+        <button class="btn btn-secondary btn-soft" @click="modalOpen = false">
+          Close
+        </button>
+        <button class="btn btn-primary" @click="addServer">Save changes</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useEndpointStore } from "../stores/useEndpointStore.js";
 import { storeToRefs } from "pinia";
+
+const sidebarRef = ref(null);
+
+const handleClickOutsideSidebar = (event) => {
+  if (sidebarRef.value && !sidebarRef.value.contains(event.target)) {
+    sidebarOpen.value = false;
+  }
+};
 
 const endpointStore = useEndpointStore();
 const { endpoints } = storeToRefs(endpointStore);
 
 const serverName = ref("");
 const serverUrl = ref("");
+
+const sidebarOpen = ref(false);
+const modalOpen = ref(false);
 
 const selectElement = (index) => {
   endpointStore.setSelectedEndpoint(index);
@@ -156,8 +163,7 @@ const addServer = async () => {
     serverName.value = "";
     serverUrl.value = "";
 
-    // Close modal
-    document.querySelector('[data-overlay="#fullscreen-modal"]')?.click();
+    modalOpen.value = false;
   } catch (err) {
     console.error("Error: ", err);
   }
