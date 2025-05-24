@@ -31,8 +31,9 @@
       :aria-labelledby="`tab-${tab.id}`"
       v-show="tab.id === activeTab"
     >
-      <BodyGrid v-if="tab.a == 1" />
+      <BodyGrid v-if="tab.a == 1" :key="endpoints[selectedEndpoint]" />
       <Chart v-if="tab.a == 2" :latestResponseMs="endpoints[selectedEndpoint].responseTime" :key="endpoints[selectedEndpoint]" />
+      <Notes v-if="tab.a == 3" :key="endpoints[selectedEndpoint]" />
     </div>
   </div>
 </template>
@@ -41,6 +42,7 @@
 import { ref } from 'vue'
 import BodyGrid from './BodyGrid.vue'
 import Chart from './Chart.vue'
+import Notes from './Notes.vue';
 
 import { useEndpointStore } from "../stores/useEndpointStore.js";
 import { storeToRefs } from "pinia";

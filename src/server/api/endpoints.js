@@ -75,6 +75,8 @@ router.get('/', (req, res) => {
  *                 type: integer
  *               api:
  *                 type: integer
+ *               notes:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Endpoint added
@@ -84,7 +86,7 @@ router.get('/', (req, res) => {
  *         description: Endpoint already on db
  */
 router.post('/add', (req, res) => {
-  const { name, url, status = false, incidents = 0, prev_incidents = 0, prev_responseTime = 0, responseTime = 0, website = 0, api = 0, responseTimeArray = {data: []} } = req.body;
+  const { name, url, status = false, incidents = 0, prev_incidents = 0, prev_responseTime = 0, responseTime = 0, website = 0, api = 0, responseTimeArray = {data: []}, notes = "" } = req.body;
 
   if (!name || !url) {
     return res.status(400).json({ error: 'Missing datas' });
@@ -99,7 +101,7 @@ router.post('/add', (req, res) => {
       }
 
       return knex('endpoints')
-        .insert({ name, url, status, incidents, responseTime, website, api, prev_incidents, prev_responseTime, responseTimeArray })
+        .insert({ name, url, status, incidents, responseTime, website, api, prev_incidents, prev_responseTime, responseTimeArray, notes })
         .returning('*')
         .then((newData) => {
           res.status(201).json({ data: newData });
@@ -109,5 +111,58 @@ router.post('/add', (req, res) => {
       res.status(500).json({ error: err.message });
     });
 });
+
+/**
+ * @swagger
+ * /endpoints/{id}/note:
+ *   patch:
+ *     summary: Update notes for a specific endpoint
+ *     tags: [Endpoints]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Endpoint ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               notes:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Notes updated successfully
+ *       404:
+ *         description: Endpoint not found
+ *       500:
+ *         description: Server error
+ */
+router.patch('/:id/note', (req, res) => {
+  const { id } = req.params;
+  const { notes } = req.body;
+
+  if (typeof notes !== 'string') {
+    return res.status(400).json({ error: 'Invalid notes format' });
+  }
+
+  knex('endpoints')
+    .where({ id })
+    .update({ notes })
+    .then((updatedRows) => {
+      if (updatedRows === 0) {
+        return res.status(404).json({ error: 'Endpoint not found' });
+      }
+      res.status(200).json({ message: 'Notes updated successfully' });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
+
 
 export default router;

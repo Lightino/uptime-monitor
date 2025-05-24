@@ -11,6 +11,7 @@ export async function up(knex) {
     table.jsonb('responseTimeArray');
     table.integer('website');
     table.integer('api');
+    table.string('notes');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });
