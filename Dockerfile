@@ -5,7 +5,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # Copia e installazione delle dipendenze
-COPY package.json yarn.lock ./
+COPY package.json ./
 RUN yarn install --frozen-lockfile
 
 # Copia del codice sorgente
