@@ -1,7 +1,7 @@
 import express from "express";
 import chalk from "chalk";
 import path from "path";
-import dotenvFlow  from "dotenv-flow";
+import dotenvFlow from "dotenv-flow";
 import http from "http";
 
 import api from "./api/index.js";
@@ -16,7 +16,7 @@ import { startMonitorJob, setWebSocketClients } from "./jobs/monitor.js";
 import { WebSocketServer } from "ws";
 
 if (process.env.NODE_ENV !== "production") {
-  dotenvFlow .config();
+  dotenvFlow.config();
 }
 
 const port = process.env.PORT || 3000;
