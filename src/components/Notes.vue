@@ -36,7 +36,7 @@ export default {
 
       clearTimeout(this.debounceTimer);
       this.debounceTimer = setTimeout(() => {
-        fetch(`http://localhost:3000/api/endpoints/${id}/note`, {
+        fetch(`${import.meta.env.VITE_APIURL}/api/endpoints/${id}/note`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json",
             Authorization: `Bearer ${access_token}`
