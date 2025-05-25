@@ -54,9 +54,8 @@
           </ul>
         </aside>
       </Transition>
-      
-      <div class="flex-1" @click="handleClickOutsideSidebar"></div>
 
+      <div class="flex-1" @click="handleClickOutsideSidebar"></div>
     </div>
   </div>
 
@@ -126,7 +125,7 @@ const handleClickOutsideSidebar = (event) => {
 };
 
 const endpointStore = useEndpointStore();
-const { endpoints } = storeToRefs(endpointStore);
+const { endpoints, access_token } = storeToRefs(endpointStore);
 
 const serverName = ref("");
 const serverUrl = ref("");
@@ -145,10 +144,12 @@ const addServer = async () => {
   };
 
   try {
+
     const res = await fetch("http://localhost:3000/api/endpoints/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${endpointStore.access_token}`,
       },
       body: JSON.stringify(payload),
     });

@@ -1,7 +1,10 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 text-white px-6">
-    <div class="bg-base-100 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center space-y-6">
-        
+  <div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 text-white px-6"
+  >
+    <div
+      class="bg-base-100 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center space-y-6"
+    >
       <div class="text-5xl text-primary">
         <span class="icon-[tabler--lock]"></span>
       </div>
@@ -28,7 +31,13 @@ export default {
     const { loginWithRedirect } = useAuth0();
 
     return {
-      login: () => loginWithRedirect(),
+      login: () =>
+        loginWithRedirect({
+          authorizationParams: {
+            audience: "https://dev-9mvz0nf6.us.auth0.com/api/v2/",
+            scope: "read:current_user",
+          },
+        }),
     };
   },
 };

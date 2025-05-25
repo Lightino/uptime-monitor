@@ -92,10 +92,9 @@ connectToDb()
     }
   })
   .then(() => {
-    // Use server.listen instead of app.listen for WebSocket compatibility
     server.listen(port, () => {
       console.log(
-        `👂\tExample app listening on port ${chalk.bold.yellow(port)}`
+        `👂\tApp listening on port ${chalk.bold.yellow(port)}`
       );
 
       setWebSocketClients(clients);
@@ -103,7 +102,6 @@ connectToDb()
     });
   });
 
-// Graceful shutdown on SIGINT (Ctrl+C)
 process.on("SIGINT", () => {
   console.log("Shutting down server...");
   clearInterval(interval);

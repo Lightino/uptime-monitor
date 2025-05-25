@@ -57,6 +57,7 @@ import { storeToRefs } from "pinia";
 import { useAuth0 } from "@auth0/auth0-vue";
 
 const { user, isAuthenticated } = useAuth0();
+const auth0 = useAuth0();
 
 const endpointStore = useEndpointStore();
 const { endpoints, selectedEndpoint } = storeToRefs(endpointStore);
@@ -64,7 +65,7 @@ const { endpoints, selectedEndpoint } = storeToRefs(endpointStore);
 
 const userStore = useUserStore();
 
-watch(isAuthenticated, (newVal) => {
+watch(isAuthenticated, async (newVal) => {
   if (newVal) {
     window.HSStaticMethods.autoInit();
     userStore.setUser(user.value);
@@ -81,6 +82,6 @@ socket.addEventListener("message", (event) => {
 });
 
 onMounted(() => {
-  endpointStore.fetchEndpoints();
+  endpointStore.fetchEndpoints(auth0);
 });
 </script>

@@ -4,6 +4,7 @@ export const useEndpointStore = defineStore("endpoint", {
   state: () => ({
     endpoints: [],
     selectedEndpoint: 0,
+    access_token: null,
   }),
   actions: {
     setEndpoints(data) {
@@ -12,12 +13,27 @@ export const useEndpointStore = defineStore("endpoint", {
     setSelectedEndpoint(index) {
       this.selectedEndpoint = index;
     },
-    setEndpointsArray(array){
+    setEndpointsArray(array) {
       this.endpoints = array;
     },
-    async fetchEndpoints() {
+    async fetchEndpoints(auth0) {
       try {
-        const res = await fetch("http://localhost:3000/api/endpoints");
+        
+        if(!this.access_token) {
+          this.access_token = await auth0.getAccessTokenSilently({
+            authorizationParams: {
+              audience: "https://dev-9mvz0nf6.us.auth0.com/api/v2/",
+            }
+          });
+        }
+
+        await fetch("http://localhost:3000/api/users/me", {
+          headers: { Authorization: `Bearer ${this.access_token}` },
+        });
+
+        const res = await fetch("http://localhost:3000/api/endpoints", {
+          headers: { Authorization: `Bearer ${this.access_token}` },
+        });
         const json = await res.json();
         this.setEndpoints(json);
       } catch (err) {

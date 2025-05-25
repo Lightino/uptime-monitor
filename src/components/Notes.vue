@@ -32,11 +32,15 @@ export default {
 
       const id = this.endpointStore.endpoints[selected].id;
 
+      const access_token = this.endpointStore.access_token;
+
       clearTimeout(this.debounceTimer);
       this.debounceTimer = setTimeout(() => {
         fetch(`http://localhost:3000/api/endpoints/${id}/note`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`
+           },
           body: JSON.stringify({
             notes: newVal
           }),
