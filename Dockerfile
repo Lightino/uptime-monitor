@@ -19,7 +19,10 @@ COPY . .
 
 # Build
 ARG NODE_ENV=production
-ENV NODE_ENV ${NODE_ENV}
+ARG VITE_APIURI
+ENV NODE_ENV=${NODE_ENV}
+ENV VITE_APIURI=${VITE_APIURI}
+
 RUN bun run build
 
 # STAGE 2: Runtime
@@ -39,7 +42,7 @@ COPY --from=build /app/src/server ./src/server
 COPY --from=build /app/bun.lock ./bun.lock
 
 ARG NODE_ENV=production
-ENV NODE_ENV ${NODE_ENV}
+ENV NODE_ENV=${NODE_ENV}
 
 # Installa solo deps di produzione
 RUN bun install --production --frozen-lockfile
