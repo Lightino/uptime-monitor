@@ -36,7 +36,6 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./
 COPY --from=build /app/src/server ./src/server
-COPY --from=build /app/.env.production ./.env.production
 COPY --from=build /app/bun.lock ./bun.lock
 
 ARG NODE_ENV=production

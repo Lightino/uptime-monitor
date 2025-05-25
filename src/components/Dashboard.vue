@@ -48,7 +48,6 @@ import Navbar from "./Navbar.vue";
 import Tabs from "./Tabs.vue";
 import Services from "./subcomponents/Services.vue";
 import Login from "./Login.vue";
-import Logout from "./Logout.vue";
 import { onMounted, watch } from "vue";
 
 import { useEndpointStore } from "../stores/useEndpointStore.js";
