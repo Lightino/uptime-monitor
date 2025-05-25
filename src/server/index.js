@@ -1,7 +1,7 @@
 import express from "express";
 import chalk from "chalk";
 import path from "path";
-import dotenv from "dotenv";
+import dotenv from "dotenv-flow";
 import http from "http";
 
 import api from "./api/index.js";
