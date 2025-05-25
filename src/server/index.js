@@ -15,7 +15,9 @@ import swaggerSpec from "./swagger.cjs";
 import { startMonitorJob, setWebSocketClients } from "./jobs/monitor.js";
 import { WebSocketServer } from "ws";
 
-dotenv.config();
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 const port = process.env.PORT || 3000;
 const env = process.env.NODE_ENV || "development";
