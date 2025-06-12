@@ -55,21 +55,44 @@ import { useUserStore } from "../stores/useUserStore.js";
 import { storeToRefs } from "pinia";
 import { useAuth0 } from "@auth0/auth0-vue";
 
+import _ from "lodash";
+
+import { toRaw, isRef, unref } from 'vue'
+
+function deepUnwrap(obj) {
+  const raw = toRaw(unref(obj))
+
+  if (Array.isArray(raw)) {
+    return raw.map(deepUnwrap)
+  } else if (raw !== null && typeof raw === 'object') {
+    const result = {}
+    for (const key in raw) {
+      result[key] = deepUnwrap(raw[key])
+    }
+    return result
+  }
+
+  return raw
+}
+
+
 const { user, isAuthenticated } = useAuth0();
 const auth0 = useAuth0();
 
 const endpointStore = useEndpointStore();
 const { endpoints, selectedEndpoint } = storeToRefs(endpointStore);
 
-
 const userStore = useUserStore();
 
-watch(isAuthenticated, async (newVal) => {
-  if (newVal) {
-    window.HSStaticMethods.autoInit();
-    userStore.setUser(user.value);
+watch([isAuthenticated, user], ([auth, u]) => {
+  window.HSStaticMethods.autoInit();
+  if (auth && u && Object.keys(u).length > 0) {
+    const cleanUser = deepUnwrap(u)
+    userStore.setUser(cleanUser)
   }
-});
+}, { immediate: true })
+
+
 
 const socket = new WebSocket("ws://localhost:3000");
 
