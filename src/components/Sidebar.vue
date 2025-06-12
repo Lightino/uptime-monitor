@@ -145,7 +145,7 @@ const addServer = async () => {
 
   try {
 
-    const res = await fetch(import.meta.env.VITE_APIURI + "/api/endpoints/add", {
+    const res = await fetch(import.meta.env.VITE_APIURL + "/api/endpoints/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

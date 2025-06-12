@@ -27,11 +27,11 @@ export const useEndpointStore = defineStore("endpoint", {
           });
         }
 
-        await fetch(import.meta.env.VITE_APIURI + "/api/users/me", {
+        await fetch(import.meta.env.VITE_APIURL + "/api/users/me", {
           headers: { Authorization: `Bearer ${this.access_token}` },
         });
 
-        const res = await fetch(import.meta.env.VITE_APIURI +"/api/endpoints", {
+        const res = await fetch(import.meta.env.VITE_APIURL +"/api/endpoints", {
           headers: { Authorization: `Bearer ${this.access_token}` },
         });
         const json = await res.json();
