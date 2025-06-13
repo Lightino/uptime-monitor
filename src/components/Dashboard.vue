@@ -95,7 +95,7 @@ watch([isAuthenticated, user], ([auth, u]) => {
 
 
 const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
-const wsHost = `${wsProtocol}://${window.location.hostname}:3000`;
+const wsHost = `${wsProtocol}://${window.location.host}`;
 const socket = new WebSocket(wsHost);
 
 socket.addEventListener("message", (event) => {
