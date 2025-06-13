@@ -94,7 +94,7 @@ watch([isAuthenticated, user], ([auth, u]) => {
 
 
 
-const socket = new WebSocket("ws://" + import.meta.env.VITE_WS_HOST);
+const socket = new WebSocket(import.meta.env.VITE_WS_HOST);
 
 socket.addEventListener("message", (event) => {
   const message = JSON.parse(event.data);
