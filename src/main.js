@@ -43,6 +43,7 @@ app.use(
   createAuth0({
     domain: "dev-9mvz0nf6.us.auth0.com",
     clientId: "2E1Zrg1Yp6F3wrJc0g7zrGtiJpcHUPd0",
+    cacheLocation: 'localstorage',
     authorizationParams: {
       redirect_uri: window.location.origin,
     },
