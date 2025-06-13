@@ -94,7 +94,9 @@ watch([isAuthenticated, user], ([auth, u]) => {
 
 
 
-const socket = new WebSocket(import.meta.env.VITE_WS_HOST);
+const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+const wsHost = `${wsProtocol}://${window.location.hostname}:3000`;
+const socket = new WebSocket(wsHost);
 
 socket.addEventListener("message", (event) => {
   const message = JSON.parse(event.data);
