@@ -86,7 +86,6 @@ const userStore = useUserStore();
 
 watch([isAuthenticated, user], ([auth, u]) => {
   window.HSStaticMethods.autoInit();
-  alert(isAuthenticated.value)
   if (auth && u && Object.keys(u).length > 0) {
     const cleanUser = deepUnwrap(u)
     userStore.setUser(cleanUser)
