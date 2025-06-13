@@ -19,9 +19,7 @@ COPY . .
 
 # Build
 ARG NODE_ENV=production
-ARG VITE_APIURL
 ENV NODE_ENV=${NODE_ENV}
-ENV VITE_APIURL=${VITE_APIURL}
 
 RUN bun run build
 
