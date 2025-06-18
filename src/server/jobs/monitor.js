@@ -17,6 +17,7 @@ export function startMonitorJob() {
         let status = false;
 
         let errors = 0;
+        let responseTime = 0;
 
         try {
           const res = await fetch(ep.url, {
@@ -24,12 +25,12 @@ export function startMonitorJob() {
             signal: AbortSignal.timeout(10000),
           });
           status = res.ok;
+          responseTime = Date.now() - start;
         } catch (err) {
           errors = ep.incidents + 1;
+          responseTime = 0;
           console.error(`❌ Errore su ${ep.url}:`, err.message);
         }
-
-        const responseTime = Date.now() - start;
 
         ep.responseTimeArray['data'] = _.takeRight([...ep.responseTimeArray['data'] , responseTime], 10);
 

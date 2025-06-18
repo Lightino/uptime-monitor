@@ -1,9 +1,9 @@
 <template>
   <div className="grid grid-cols-2 grid-rows-2 gap-4 animate-fade-up">
     <div class="p-6 rounded-xl bg-[#2b3840]">
-      <div class="text-sm mb-1">Weekly Uptime</div>
-      <div class="text-2xl font-semibold mb-1">99.9%</div>
-      <div class="text-green-500">+0.1%</div>
+      <div class="text-sm mb-1">Uptime</div>
+      <div class="text-2xl font-semibold mb-1">{{uptime_percent}}%</div>
+      <!-- <div class="text-green-500">+0.1%</div> -->
     </div>
     <div class="bg-[#2b3840] p-6 rounded-xl">
       <div class="text-sm mb-1">Response Time</div>
@@ -37,6 +37,14 @@ const differenceMs = computed(() => {
 const differenceIncidents = computed(() => {
   return endpoints.value[selectedEndpoint.value].incidents - endpoints.value[selectedEndpoint.value].prev_incidents;
 })
+
+const uptime_percent = computed(() => {
+  const selected = endpoints.value[selectedEndpoint.value];
+  const incidents = selected.incidents;
+  const totale_richieste = selected.responseTimeArray.data.length;
+  if (totale_richieste === 0) return 0; 
+  return ((totale_richieste - incidents) / totale_richieste) * 100;
+});
 
 
 </script>
